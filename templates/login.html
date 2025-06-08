@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - AnalyticsPostres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo AnalyticsPostres">
+            <h1>AnalyticsPostres</h1>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                <li><a href="{{ url_for('registro') }}">Registrarse</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-container">
+            <div class="auth-form">
+                <h2>Iniciar Sesión</h2>
+                <p>Accede a tu panel de análisis de ventas</p>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Correo electrónico</label>
+                        <input type="email" id="login-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" name="password" required>
+                        <small><a href="recuperar.html">¿Olvidaste tu contraseña?</a></small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="auth-button">Iniciar Sesión</button>
+                    </div>
+                </form>
+                
+                <div class="auth-links">
+                    <p>¿No tienes una cuenta? <a href="{{ url_for('registro') }}">Regístrate aquí</a></p>
+                </div>
+            </div>
+            
+            <div class="auth-image">
+                <img src="{{ url_for('static', filename='img/login-bg.jpg') }}" alt="Análisis de ventas">
+                <div class="auth-quote">
+                    <p>"Nuestros clientes han incrementado sus ventas en un 40% usando nuestra plataforma"</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>© 2023 AnalyticsPostres. Todos los derechos reservados.</p>
+        <nav class="footer-nav">
+            <a href="politica-privacidad.html">Política de Privacidad</a>
+            <a href="terminos.html">Términos de Servicio</a>
+        </nav>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>

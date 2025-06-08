@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalyticsPostres - Solución para Negocios de Postres</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.jpg') }}">
+</head>
+<body>
+    <!-- Header con efecto sticky y animación -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo animate__animated animate__fadeInLeft">
+                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo AnalyticsPostres">
+                <h1>Analytics<span>Postres</span></h1>
+            </div>
+            <nav class="main-nav animate__animated animate__fadeInRight">
+                <ul>
+                    <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+                    <li><a href="#blog" class="nav-link">Blog</a></li>
+                    <li><a href="#sobre-nosotros" class="nav-link">Sobre Nosotros</a></li>
+                    <li><a href="#tecnologia" class="nav-link">Tecnología</a></li>
+                    <li><a href="#contacto" class="nav-link">Contacto</a></li>
+                    <li><a href="{{ url_for('registro') }}" class="cta-nav-button">Registrarse</a></li>
+                </ul>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Sección Hero con animación de fondo -->
+    <section id="inicio" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content animate__animated animate__fadeInUp">
+                <h2>Potenciando tu Negocio de Postres Universitarios</h2>
+                <p class="subtitle">La solución tecnológica definitiva para análisis de ventas en entornos académicos</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('registro') }}" class="cta-button">Regístrate Gratis</a>
+                    <a href="#tecnologia') }}" class="secondary-button">Conoce más <i class="fas fa-arrow-down"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-down animate__animated animate__bounce animate__infinite">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Sección de características con animaciones -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header animate__animated" data-animate="animate__fadeInUp">
+                <h2>Nuestras <span>Ventajas</span></h2>
+                <p>Descubre cómo podemos transformar tu negocio de postres</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card animate__animated" data-animate="animate__fadeInUp" data-delay="0.1s">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Análisis en Tiempo Real</h3>
+                    <p>Monitorea tus ventas con modelos avanzados de series de tiempo</p>
+                    <div class="feature-wave"></div>
+                </div>
+                
+                <div class="feature-card animate__animated" data-animate="animate__fadeInUp" data-delay="0.3s">
+                    <div class="feature-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3>Enfoque Universitario</h3>
+                    <p>Adaptado a los ciclos y calendarios académicos</p>
+                    <div class="feature-wave"></div>
+                </div>
+                
+                <div class="feature-card animate__animated" data-animate="animate__fadeInUp" data-delay="0.5s">
+                    <div class="feature-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3>Para Microempresas</h3>
+                    <p>Soluciones asequibles para pequeños negocios</p>
+                    <div class="feature-wave"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Blog con efecto parallax -->
+    <section id="blog" class="blog-section">
+        <div class="parallax-bg"></div>
+        <div class="container">
+            <div class="section-header animate__animated" data-animate="animate__fadeInUp">
+                <h2>Últimas <span>Publicaciones</span></h2>
+                <p>Mantente actualizado con nuestras noticias y consejos</p>
+            </div>
+            
+            <div class="blog-posts">
+                <article class="blog-post animate__animated" data-animate="animate__fadeInLeft">
+                    <div class="post-date">
+                        <span class="day">15</span>
+                        <span class="month">Oct</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>Desarrollo de software para análisis de ventas</h3>
+                        <p>En el mundo de los negocios, cada detalle cuenta cuando se trata de maximizar las ventas y la eficiencia operativa...</p>
+                        <a href="#" class="read-more">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="post-badge">Nuevo</div>
+                </article>
+                
+                <article class="blog-post animate__animated" data-animate="animate__fadeInLeft" data-delay="0.2s">
+                    <div class="post-date">
+                        <span class="day">10</span>
+                        <span class="month">Oct</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>Modelos de series de tiempo para la industria alimenticia</h3>
+                        <p>En el campo de la industria de alimentos y bebidas, es fundamental entender las tendencias y patrones de consumo...</p>
+                        <a href="#" class="read-more">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+                
+                <article class="blog-post animate__animated" data-animate="animate__fadeInLeft" data-delay="0.4s">
+                    <div class="post-date">
+                        <span class="day">05</span>
+                        <span class="month">Oct</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>Análisis de ventas de postres en entornos académicos</h3>
+                        <p>Hoy en día, cada vez más microempresas se sumergen en el mundo digital para mejorar sus operaciones...</p>
+                        <a href="#" class="read-more">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="text-center animate__animated" data-animate="animate__fadeInUp">
+                <a href="#" class="view-all-button">Ver todas las publicaciones</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección "Sobre Nosotros" con timeline animado -->
+    <section id="sobre-nosotros" class="about-section">
+        <div class="container">
+            <div class="section-header animate__animated" data-animate="animate__fadeInUp">
+                <h2>Sobre <span>Nosotros</span></h2>
+                <p>Desarrollamos software innovador para tu negocio</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text animate__animated" data-animate="animate__fadeInLeft">
+                    <p>Somos una startup especializada en el desarrollo de software para el análisis de ventas de postres en entornos universitarios. Nuestro enfoque se centra en ofrecer soluciones tecnológicas de vanguardia para microempresas que buscan optimizar sus operaciones.</p>
+                    
+                    <p>Con modelos de series de tiempo, brindamos herramientas efectivas para visualizar datos y mejorar la gestión empresarial, ayudando a nuestros clientes a alcanzar sus objetivos de manera eficiente.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" data-count="150">0</div>
+                            <div class="stat-label">Clientes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-count="95">0</div>
+                            <div class="stat-label">% Satisfacción</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-count="12">0</div>
+                            <div class="stat-label">Universidades</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-image animate__animated" data-animate="animate__fadeInRight">
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename='img/team.jpg') }}" alt="Nuestro equipo" class="main-image">
+                        <div class="circle-decor circle-1"></div>
+                        <div class="circle-decor circle-2"></div>
+                        <div class="circle-decor circle-3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline animate__animated" data-animate="animate__fadeInUp">
+                <div class="timeline-item">
+                    <div class="timeline-date">2023</div>
+                    <div class="timeline-content">
+                        <h4>Expansión Nacional</h4>
+                        <p>Llegamos a 10 universidades más en todo el país</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2022</div>
+                    <div class="timeline-content">
+                        <h4>Premio a la Innovación</h4>
+                        <p>Reconocidos como la startup más innovadora en tecnología alimentaria</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2021</div>
+                    <div class="timeline-content">
+                        <h4>Nacimiento de AnalyticsPostres</h4>
+                        <p>Fundamos la empresa con el objetivo de transformar los negocios universitarios</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Tecnología con animaciones 3D -->
+    <section id="tecnologia" class="tech-section">
+        <div class="container">
+            <div class="section-header animate__animated" data-animate="animate__fadeInUp">
+                <h2>Nuestra <span>Tecnología</span></h2>
+                <p>Innovación en acción para tu negocio</p>
+            </div>
+            
+            <div class="tech-content">
+                <div class="tech-features animate__animated" data-animate="animate__fadeInLeft">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Modelos predictivos basados en IA</h4>
+                            <p>Anticipa tendencias con nuestra inteligencia artificial especializada</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Dashboards interactivos</h4>
+                            <p>Visualiza tus datos de manera intuitiva y en tiempo real</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Integración con calendarios académicos</h4>
+                            <p>Adaptado a los periodos de exámenes, vacaciones y eventos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tech-image animate__animated" data-animate="animate__fadeInRight">
+                    <div class="tech-dashboard">
+                        <img src="{{ url_for('static', filename='img/dashboard.png') }}" alt="Dashboard tecnológico">
+                        <div class="pulse-effect"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-stack animate__animated" data-animate="animate__fadeInUp">
+                <h3>Tecnologías que utilizamos</h3>
+                <div class="stack-items">
+                    <div class="stack-item" data-tooltip="Python">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <div class="stack-item" data-tooltip="TensorFlow">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="stack-item" data-tooltip="JavaScript">
+                        <i class="fab fa-js"></i>
+                    </div>
+                    <div class="stack-item" data-tooltip="React">
+                        <i class="fab fa-react"></i>
+                    </div>
+                    <div class="stack-item" data-tooltip="Node.js">
+                        <i class="fab fa-node"></i>
+                    </div>
+                    <div class="stack-item" data-tooltip="MongoDB">
+                        <i class="fas fa-database"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Testimonios con carrusel -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header animate__animated" data-animate="animate__fadeInUp">
+                <h2>Lo que dicen <span>nuestros clientes</span></h2>
+                <p>Historias de éxito con AnalyticsPostres</p>
+            </div>
+            
+            <div class="testimonials-carousel animate__animated" data-animate="animate__fadeInUp">
+                <div class="testimonial active">
+                    <div class="testimonial-content">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">"Gracias a AnalyticsPostres hemos incrementado nuestras ventas en un 40% durante periodos de exámenes. La capacidad de predecir la demanda ha sido invaluable para nuestro negocio."</p>
+                        <div class="testimonial-author">
+                            <img src="{{ url_for('static', filename='img/client1.jpg') }}" alt="Cliente satisfecho">
+                            <div class="author-info">
+                                <h4>María González</h4>
+                                <p>Dueña, Dulces Universitarios</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">"El dashboard intuitivo nos ha permitido tomar decisiones rápidas basadas en datos reales. Ahora podemos ajustar nuestro inventario diario con precisión."</p>
+                        <div class="testimonial-author">
+                            <img src="{{ url_for('static', filename='img/client2.jpg') }}" alt="Cliente satisfecho">
+                            <div class="author-info">
+                                <h4>Carlos Mendoza</h4>
+                                <p>Gerente, Postres & Café</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">"Como pequeña empresa, no creímos poder acceder a tecnología tan avanzada. AnalyticsPostres ha superado todas nuestras expectativas con su relación calidad-precio."</p>
+                        <div class="testimonial-author">
+                            <img src="{{ url_for('static', filename='img/client3.jpg') }}" alt="Cliente satisfecho">
+                            <div class="author-info">
+                                <h4>Laura Jiménez</h4>
+                                <p>Fundadora, Delicias UNAM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="carousel-controls">
+                    <button class="prev-button"><i class="fas fa-chevron-left"></i></button>
+                    <div class="carousel-dots"></div>
+                    <button class="next-button"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Contacto con mapa interactivo -->
+    <!-- Sección de Contacto con mapa interactivo -->
+<section id="contacto" class="contact-section">
+    <div class="container">
+        <div class="section-header animate__animated" data-animate="animate__fadeInUp">
+            <h2>Contácta <span>con Nosotros</span></h2>
+            <p>Estamos aquí para ayudarte con tu negocio</p>
+        </div>
+        
+        <div class="contact-content">
+            <div class="contact-info animate__animated" data-animate="animate__fadeInLeft">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="info-text">
+                        <h4>Teléfono</h4>
+                        <p>+57 123 456 7890</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="info-text">
+                        <h4>Email</h4>
+                        <p>info@analyticspostres.com</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="info-text">
+                        <h4>Dirección</h4>
+                        <p>Dg. 46a #15-10, Teusaquillo, Bogotá, Cundinamarca</p>
+                    </div>
+                </div>
+                
+                <div class="social-media">
+                    <h4>Síguenos</h4>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resto del formulario de contacto se mantiene igual -->
+            <div class="contact-form animate__animated" data-animate="animate__fadeInRight">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" required>
+                        <label for="name">Nombre completo</label>
+                        <span class="focus-border"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" required>
+                        <label for="email">Correo electrónico</label>
+                        <span class="focus-border"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" id="subject" name="subject">
+                        <label for="subject">Asunto</label>
+                        <span class="focus-border"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="4" required></textarea>
+                        <label for="message">Mensaje</label>
+                        <span class="focus-border"></span>
+                    </div>
+                    
+                    <button type="submit" class="submit-button">
+                        <span>Enviar Mensaje</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="contact-map animate__animated" data-animate="animate__fadeInUp">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.785646055931!2d-74.076923!3d4.6385829!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9a3b0b1b1b1b%3A0x1b1b1b1b1b1b1b1b!2sDg.%2046a%20%2315-10%2C%20Teusaquillo%2C%20Bogot%C3%A1!5e0!3m2!1ses!2sco!4v1620000000000!5m2!1ses!2sco" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+    <!-- Sección CTA flotante -->
+    <div class="floating-cta animate__animated animate__fadeInUp animate__delay-1s">
+        <div class="cta-text">
+            <i class="fas fa-rocket"></i>
+            <span>¿Listo para potenciar tu negocio?</span>
+        </div>
+        <a href="{{ url_for('registro') }}" class="cta-button">Comienza ahora</a>
+    </div>
+
+    <!-- Footer con efecto wave -->
+    <footer class="main-footer">
+        <div class="footer-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+            </svg>
+        </div>
+        
+        <div class="footer-content">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-logo">
+                        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="AnalyticsPostres">
+                        <p>Potenciando negocios de postres en entornos universitarios con tecnología de vanguardia.</p>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <h4>Enlaces Rápidos</h4>
+                        <ul>
+                            <li><a href="#inicio') }}">Inicio</a></li>
+                            <li><a href="#blog') }}">Blog</a></li>
+                            <li><a href="#sobre-nosotros') }}">Sobre Nosotros</a></li>
+                            <li><a href="#tecnologia') }}">Tecnología</a></li>
+                            <li><a href="#contacto') }}">Contacto</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="{{ url_for('static', filename='politica-privacidad.html') }}">Política de Privacidad</a></li>
+                            <li><a href="{{ url_for('static', filename='terminos-servicio.html') }}">Términos de Servicio</a></li>
+                            <li><a href="{{ url_for('static', filename='cookies.html') }}">Política de Cookies</a></li>
+                            <li><a href="{{ url_for('static', filename='accesibilidad.html') }}">Accesibilidad</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-newsletter">
+                        <h4>Newsletter</h4>
+                        <p>Suscríbete para recibir consejos y actualizaciones.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Tu correo electrónico">
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="copyright">
+                        <p>&copy; 2023 AnalyticsPostres. Todos los derechos reservados.</p>
+                    </div>
+                    
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón de WhatsApp flotante -->
+    <a href="https://wa.me/5213312345678') }}" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Botón de volver arriba -->
+    <a href="#inicio') }}" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

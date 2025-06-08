@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAVEGARLOUR - Dashboard Analítico</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 1.5rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+        
+        .nav-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .nav-item:hover {
+            background-color: #f0f4ff;
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            background-color: #f0f4ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Main Content */
+        
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        /* Cards */
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        /* Tabs */
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+            margin-right: 0.5rem;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        /* Charts */
+        
+        .chart-container {
+            height: 400px;
+            margin-top: 1rem;
+        }
+        /* Data Input */
+        
+        .data-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+        /* Buttons */
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        /* Tab Content */
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        /* Dashboard Grid */
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Data Table */
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table th {
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f0f4ff;
+        }
+        /* Cost Analysis */
+        
+        .cost-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .cost-category {
+            font-weight: 500;
+        }
+        
+        .cost-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        /* Account Settings */
+        
+        .account-form {
+            max-width: 500px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .data-input {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">NL</div>
+                <span>NAVEGARLOUR</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Dashboard</div>
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <div class="nav-icon">📊</div>
+                    <span>Series de Tiempo</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="forecast">
+                    <div class="nav-icon">📈</div>
+                    <span>Proyecciones</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="profitability">
+                    <div class="nav-icon">💰</div>
+                    <span>Rentabilidad</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Herramientas</div>
+                <a href="#" class="nav-item" data-tab="models">
+                    <div class="nav-icon">⚙️</div>
+                    <span>Modelos</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="data">
+                    <div class="nav-icon">📂</div>
+                    <span>Datos</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="analysis">
+                    <div class="nav-icon">🔍</div>
+                    <span>Análisis</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Configuración</div>
+                <a href="#" class="nav-item" data-tab="account">
+                    <div class="nav-icon">👤</div>
+                    <span>Cuenta</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="settings">
+                    <div class="nav-icon">⚡</div>
+                    <span>Preferencias</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title" id="current-page-title">Series de Tiempo</h1>
+                <div class="user-avatar">TU</div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Cargar Datos</h2>
+                    </div>
+
+                    <div class="data-input">
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">Fuente de Datos</label>
+                                <select class="input-field">
+                                    <option>Subir archivo</option>
+                                    <option selected>Conectar a base de datos</option>
+                                    <option>API externa</option>
+                                    <option>Datos de ejemplo</option>
+                                </select>
+                            </div>
+
+                            <div class="file-upload">
+                                <p>Arrastra tu archivo CSV o Excel aquí</p>
+                                <small>o haz clic para seleccionar</small>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">Configuración del Modelo</label>
+                                <select class="input-field">
+                                    <option>Auto-detección</option>
+                                    <option>ARIMA</option>
+                                    <option>SARIMA</option>
+                                    <option selected>Prophet</option>
+                                    <option>LSTM</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">Columna de Fecha</label>
+                                <input type="text" class="input-field" placeholder="Ej: fecha, date">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">Columna de Valores</label>
+                                <input type="text" class="input-field" placeholder="Ej: ventas, consumo">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">Períodos a Proyectar</label>
+                                <input type="number" class="input-field" value="12">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;">
+                        Ejecutar Análisis
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Proyección de Ventas</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="timeSeriesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast Tab -->
+            <div id="forecast-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Proyecciones Futuras</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Intervalos de Confianza</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="confidenceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profitability Tab -->
+            <div id="profitability-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Rentabilidad por Mes</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="profitabilityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Análisis de Costos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="costAnalysisChart"></canvas>
+                    </div>
+                    <ul class="cost-list">
+                        <li class="cost-item">
+                            <span class="cost-category">Materias primas</span>
+                            <span class="cost-value">45%</span>
+                        </li>
+                        <li class="cost-item">
+                            <span class="cost-category">Mano de obra</span>
+                            <span class="cost-value">30%</span>
+                        </li>
+                        <li class="cost-item">
+                            <span class="cost-category">Logística</span>
+                            <span class="cost-value">12%</span>
+                        </li>
+                        <li class="cost-item">
+                            <span class="cost-category">Operativos</span>
+                            <span class="cost-value">8%</span>
+                        </li>
+                        <li class="cost-item">
+                            <span class="cost-category">Otros</span>
+                            <span class="cost-value">5%</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Models Tab -->
+            <div id="models-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Comparación de Modelos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="modelsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Rendimiento de Modelos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="modelPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Tab -->
+            <div id="data-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Gestión de Datos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dataDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Tab -->
+            <div id="analysis-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Análisis Avanzado</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="correlationChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Tendencia Estacional</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="seasonalityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Tab -->
+            <div id="account-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Configuración de Cuenta</h2>
+                    </div>
+                    <div class="account-form">
+                        <div class="form-group">
+                            <label class="input-label">Nombre</label>
+                            <input type="text" class="input-field" placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label class="input-label">Correo electrónico</label>
+                            <input type="email" class="input-field" placeholder="tu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="input-label">Contraseña</label>
+                            <input type="password" class="input-field" placeholder="••••••••">
+                        </div>
+                        <button class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Preferencias</h2>
+                    </div>
+                    <div class="account-form">
+                        <div class="form-group">
+                            <label class="input-label">Idioma</label>
+                            <select class="input-field">
+                                <option>Español</option>
+                                <option>Inglés</option>
+                                <option>Portugués</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="input-label">Tema</label>
+                            <select class="input-field">
+                                <option>Claro</option>
+                                <option>Oscuro</option>
+                                <option>Automático</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="input-label">Notificaciones</label>
+                            <select class="input-field">
+                                <option>Activadas</option>
+                                <option>Desactivadas</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary">Guardar Preferencias</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            const pageTitle = document.getElementById('current-page-title');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Remove active class from all items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+
+                    // Add active class to clicked item
+                    this.classList.add('active');
+
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+
+                    // Show the selected tab content
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+
+                    // Update page title
+                    pageTitle.textContent = this.querySelector('span').textContent;
+                });
+            });
+
+            // Initialize Charts
+            function createTimeSeriesChart() {
+                const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Ventas',
+                            data: [120000, 135000, 142000, 138000, 145000, 150000, 158000, 165000, 162000, 170000, 175000, 182000],
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Ventas: $${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${(value/1000).toLocaleString()}k`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createForecastChart() {
+                const ctx = document.getElementById('forecastChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
+                            'Ene*', 'Feb*', 'Mar*', 'Abr*', 'May*', 'Jun*', 'Jul*', 'Ago*', 'Sep*', 'Oct*', 'Nov*', 'Dic*'
+                        ],
+                        datasets: [{
+                            label: 'Histórico',
+                            data: [120000, 135000, 142000, 138000, 145000, 150000, 158000, 165000, 162000, 170000, 175000, 182000],
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        }, {
+                            label: 'Proyección',
+                            data: [null, null, null, null, null, null, null, null, null, null, null, 182000,
+                                188000, 195000, 200000, 210000, 215000, 220000, 225000, 230000, 235000, 240000, 245000, 250000
+                            ],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.05)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' +
+                                            (context.raw ? `$${(context.raw/1000).toLocaleString()}k` : 'N/A');
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${(value/1000).toLocaleString()}k`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createConfidenceChart() {
+                const ctx = document.getElementById('confidenceChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene*', 'Feb*', 'Mar*', 'Abr*', 'May*', 'Jun*', 'Jul*', 'Ago*', 'Sep*', 'Oct*', 'Nov*', 'Dic*'],
+                        datasets: [{
+                            label: 'Proyección',
+                            data: [188000, 195000, 200000, 210000, 215000, 220000, 225000, 230000, 235000, 240000, 245000, 250000],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.05)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        }, {
+                            label: 'Límite superior',
+                            data: [190000, 198000, 205000, 215000, 220000, 225000, 230000, 235000, 240000, 245000, 250000, 255000],
+                            borderColor: 'rgba(247, 37, 133, 0.3)',
+                            backgroundColor: 'rgba(247, 37, 133, 0.01)',
+                            borderWidth: 1,
+                            tension: 0.3
+                        }, {
+                            label: 'Límite inferior',
+                            data: [186000, 192000, 195000, 205000, 210000, 215000, 220000, 225000, 230000, 235000, 240000, 245000],
+                            borderColor: 'rgba(247, 37, 133, 0.3)',
+                            backgroundColor: 'rgba(247, 37, 133, 0.01)',
+                            borderWidth: 1,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: $${(context.raw/1000).toLocaleString()}k`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${(value/1000).toLocaleString()}k`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createProfitabilityChart() {
+                const ctx = document.getElementById('profitabilityChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Ganancias',
+                            data: [15000, 16000, 17000, 18000, 20000, 22000, 24000, 25000, 23000, 25000, 28000, 30000],
+                            backgroundColor: '#4cc9f0',
+                            borderColor: '#3a9ec0',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Ganancias: $${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createCostAnalysisChart() {
+                const ctx = document.getElementById('costAnalysisChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Materias primas', 'Mano de obra', 'Logística', 'Operativos', 'Otros'],
+                        datasets: [{
+                            data: [45, 30, 12, 8, 5],
+                            backgroundColor: [
+                                '#4361ee',
+                                '#4895ef',
+                                '#4cc9f0',
+                                '#f72585',
+                                '#3f37c9'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.raw}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createModelsChart() {
+                const ctx = document.getElementById('modelsChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Precisión', 'Velocidad', 'Estabilidad', 'Interpretabilidad', 'Flexibilidad'],
+                        datasets: [{
+                            label: 'ARIMA',
+                            data: [85, 90, 95, 80, 70],
+                            backgroundColor: 'rgba(67, 97, 238, 0.2)',
+                            borderColor: '#4361ee',
+                            borderWidth: 2
+                        }, {
+                            label: 'Prophet',
+                            data: [75, 80, 85, 90, 85],
+                            backgroundColor: 'rgba(247, 37, 133, 0.2)',
+                            borderColor: '#f72585',
+                            borderWidth: 2
+                        }, {
+                            label: 'LSTM',
+                            data: [92, 70, 88, 60, 95],
+                            backgroundColor: 'rgba(76, 201, 240, 0.2)',
+                            borderColor: '#4cc9f0',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: true
+                                },
+                                suggestedMin: 50,
+                                suggestedMax: 100
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createModelPerformanceChart() {
+                const ctx = document.getElementById('modelPerformanceChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['ARIMA', 'Prophet', 'LSTM'],
+                        datasets: [{
+                            label: 'MAE (Miles)',
+                            data: [12.5, 10.8, 8.3],
+                            backgroundColor: '#4361ee'
+                        }, {
+                            label: 'RMSE (Miles)',
+                            data: [15.2, 13.7, 10.5],
+                            backgroundColor: '#f72585'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: $${context.raw}k`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Error (miles de dólares)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createDataDistributionChart() {
+                const ctx = document.getElementById('dataDistributionChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Ventas', 'Costos', 'Inventario', 'Clientes'],
+                        datasets: [{
+                            data: [35, 25, 20, 20],
+                            backgroundColor: [
+                                '#4361ee',
+                                '#f72585',
+                                '#4cc9f0',
+                                '#3f37c9'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.raw}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createCorrelationChart() {
+                const ctx = document.getElementById('correlationChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Ventas vs Cantidad',
+                            data: [{
+                                x: 34,
+                                y: 82700
+                            }, {
+                                x: 37,
+                                y: 87100
+                            }, {
+                                x: 41,
+                                y: 84200
+                            }, {
+                                x: 74,
+                                y: 189100
+                            }, {
+                                x: 119,
+                                y: 443300
+                            }, {
+                                x: 92,
+                                y: 221600
+                            }, {
+                                x: 144,
+                                y: 326200
+                            }, {
+                                x: 92,
+                                y: 329500
+                            }, {
+                                x: 81,
+                                y: 242200
+                            }, {
+                                x: 115,
+                                y: 99800
+                            }, {
+                                x: 45,
+                                y: 143800
+                            }, {
+                                x: 66,
+                                y: 196000
+                            }, {
+                                x: 120,
+                                y: 433500
+                            }, {
+                                x: 20,
+                                y: 64000
+                            }, {
+                                x: 1,
+                                y: 20000
+                            }, {
+                                x: 9,
+                                y: 19800
+                            }, {
+                                x: 5,
+                                y: 15000
+                            }, {
+                                x: 145,
+                                y: 490700
+                            }, {
+                                x: 163,
+                                y: 535100
+                            }, {
+                                x: 113,
+                                y: 386000
+                            }, {
+                                x: 81,
+                                y: 294000
+                            }, {
+                                x: 225,
+                                y: 621500
+                            }, {
+                                x: 138,
+                                y: 528000
+                            }, {
+                                x: 277,
+                                y: 963500
+                            }, {
+                                x: 108,
+                                y: 402000
+                            }, {
+                                x: 211,
+                                y: 801000
+                            }, {
+                                x: 119,
+                                y: 467500
+                            }, {
+                                x: 95,
+                                y: 371500
+                            }, {
+                                x: 115,
+                                y: 460000
+                            }, {
+                                x: 11,
+                                y: 38500
+                            }, {
+                                x: 126,
+                                y: 399900
+                            }, {
+                                x: 130,
+                                y: 393100
+                            }, {
+                                x: 4,
+                                y: 16000
+                            }, {
+                                x: 9,
+                                y: 19800
+                            }],
+                            backgroundColor: '#4361ee',
+                            borderColor: '#3f37c9',
+                            borderWidth: 1,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Cantidad: ${context.parsed.x}, Ventas: $${context.parsed.y.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Ventas ($)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Cantidad Vendida'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createSeasonalityChart() {
+                const ctx = document.getElementById('seasonalityChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Tendencia',
+                            data: [120000, 125000, 130000, 135000, 140000, 145000, 150000, 155000, 160000, 165000, 170000, 175000],
+                            borderColor: '#4361ee',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'Estacionalidad',
+                            data: [0, 10000, 12000, -5000, 5000, 5000, 8000, 10000, 2000, 5000, 5000, 7000],
+                            borderColor: '#f72585',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: $${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Create all charts
+            createTimeSeriesChart();
+            createForecastChart();
+            createConfidenceChart();
+            createProfitabilityChart();
+            createCostAnalysisChart();
+            createModelsChart();
+            createModelPerformanceChart();
+            createDataDistributionChart();
+            createCorrelationChart();
+            createSeasonalityChart();
+        });
+    </script>
+</body>
+
+</html>

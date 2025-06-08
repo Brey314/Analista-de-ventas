@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Predictivo de Ventas Semanales</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 1.5rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+        
+        .nav-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .nav-item:hover {
+            background-color: #f0f4ff;
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            background-color: #f0f4ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Main Content */
+        
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        /* Cards */
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        /* Tabs */
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+            margin-right: 0.5rem;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        /* Charts */
+        
+        .chart-container {
+            height: 400px;
+            margin-top: 1rem;
+        }
+        /* Data Input */
+        
+        .data-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+        /* Buttons */
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        /* Tab Content */
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        /* Dashboard Grid */
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Data Table */
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table th {
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f0f4ff;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .data-input {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">VS</div>
+                <span>Ventas Semanales</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Navegación</div>
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <div class="nav-icon">📊</div>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="time-series">
+                    <div class="nav-icon">⏳</div>
+                    <span>Series de Tiempo</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="forecast">
+                    <div class="nav-icon">📈</div>
+                    <span>Proyecciones</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="data">
+                    <div class="nav-icon">📂</div>
+                    <span>Datos</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Modelos</div>
+                <a href="#" class="nav-item" data-tab="arima">
+                    <div class="nav-icon">📉</div>
+                    <span>ARIMA</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="sarima">
+                    <div class="nav-icon">📊</div>
+                    <span>SARIMAX</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="lstm">
+                    <div class="nav-icon">🧠</div>
+                    <span>LSTM</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Análisis Predictivo de Ventas Semanales</h1>
+                <div class="user-avatar">TU</div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Resumen de Ventas</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Relación Cantidad vs Ventas</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Series Tab -->
+            <div id="time-series-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Serie Temporal de Ventas</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="timeSeriesChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Descomposición de la Serie</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="componentsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast Tab -->
+            <div id="forecast-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Proyección de Ventas</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Comparación de Modelos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="modelsComparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Tab -->
+            <div id="data-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Datos Semanales</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Semana</th>
+                                    <th>Cantidad</th>
+                                    <th>Ventas ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-table-body">
+                                <!-- Los datos se llenarán con JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ARIMA Tab -->
+            <div id="arima-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Modelo ARIMA</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="arimaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SARIMA Tab -->
+            <div id="sarima-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Modelo SARIMAX</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="sarimaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LSTM Tab -->
+            <div id="lstm-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Modelo LSTM</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="lstmChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Datos semanales
+            const weeklyData = {
+                weeks: Array.from({
+                    length: 34
+                }, (_, i) => `Semana ${i+1}`),
+                quantities: [
+                    34, 37, 41, 74, 119, 92, 144, 92, 81, 115,
+                    45, 66, 120, 20, 1, 9, 5, 145, 163, 113,
+                    81, 225, 138, 277, 108, 211, 119, 95, 115, 11,
+                    126, 130, 4, 9
+                ],
+                sales: [
+                    82700, 87100, 84200, 189100, 443300, 221600, 326200, 329500, 242200, 99800,
+                    143800, 196000, 433500, 64000, 20000, 19800, 15000, 490700, 535100, 386000,
+                    294000, 621500, 528000, 963500, 402000, 801000, 467500, 371500, 460000, 38500,
+                    399900, 393100, 16000, 19800
+                ]
+            };
+
+            // Llenar tabla de datos
+            const tableBody = document.getElementById('data-table-body');
+            weeklyData.weeks.forEach((week, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${week}</td>
+                    <td>${weeklyData.quantities[index]}</td>
+                    <td>$${weeklyData.sales[index].toLocaleString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Tab Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Remove active class from all items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+
+                    // Add active class to clicked item
+                    this.classList.add('active');
+
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+
+                    // Show the selected tab content
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Initialize Charts
+            function createMainChart() {
+                const ctx = document.getElementById('mainChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: weeklyData.weeks,
+                        datasets: [{
+                            label: 'Ventas ($)',
+                            data: weeklyData.sales,
+                            backgroundColor: '#4361ee',
+                            borderColor: '#3f37c9',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Ventas: $${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createScatterChart() {
+                const ctx = document.getElementById('scatterChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Cantidad vs Ventas',
+                            data: weeklyData.quantities.map((q, i) => ({
+                                x: q,
+                                y: weeklyData.sales[i]
+                            })),
+                            backgroundColor: '#f72585',
+                            borderColor: '#b5179e',
+                            borderWidth: 1,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Cantidad: ${context.parsed.x}, Ventas: $${context.parsed.y.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Ventas ($)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Cantidad'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createTimeSeriesChart() {
+                const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: weeklyData.weeks,
+                        datasets: [{
+                            label: 'Ventas Semanales ($)',
+                            data: weeklyData.sales,
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Ventas: $${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createComponentsChart() {
+                // Datos de ejemplo para la descomposición
+                const trend = weeklyData.sales.map((s, i) => s * 0.8 + (i * 10000));
+                const seasonality = weeklyData.sales.map((s, i) => {
+                    const cycle = i % 4; // Estacionalidad cada 4 semanas
+                    return s * 0.2 * (cycle === 0 ? 1.2 : cycle === 1 ? 0.9 : cycle === 2 ? 1.1 : 0.8);
+                });
+
+                const ctx = document.getElementById('componentsChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: weeklyData.weeks,
+                        datasets: [{
+                            label: 'Tendencia',
+                            data: trend,
+                            borderColor: '#4361ee',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'Estacionalidad',
+                            data: seasonality,
+                            borderColor: '#f72585',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createForecastChart() {
+                // Datos de ejemplo para proyección
+                const historicalWeeks = weeklyData.weeks.slice(0, 27);
+                const forecastWeeks = Array.from({
+                    length: 7
+                }, (_, i) => `Proy ${i+1}`);
+                const historicalSales = weeklyData.sales.slice(0, 27);
+                const forecastSales = [467500, 371500, 460000, 38500, 399900, 393100, 16000];
+
+                const ctx = document.getElementById('forecastChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [...historicalWeeks, ...forecastWeeks],
+                        datasets: [{
+                            label: 'Histórico',
+                            data: [...historicalSales, ...Array(forecastWeeks.length).fill(null)],
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        }, {
+                            label: 'Proyección',
+                            data: [...Array(historicalWeeks.length).fill(null), ...forecastSales],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.05)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' +
+                                            (context.raw ? `$${context.raw.toLocaleString()}` : 'N/A');
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 15
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createModelsComparisonChart() {
+                // Datos de ejemplo para comparación de modelos
+                const testWeeks = weeklyData.weeks.slice(27);
+                const actualSales = weeklyData.sales.slice(27);
+                const arimaPred = [450000, 380000, 440000, 40000, 410000, 380000, 20000];
+                const sarimaPred = [460000, 370000, 455000, 35000, 400000, 390000, 18000];
+                const lstmPred = [455000, 375000, 450000, 38000, 405000, 385000, 19000];
+
+                const ctx = document.getElementById('modelsComparisonChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: testWeeks,
+                        datasets: [{
+                            label: 'Real',
+                            data: actualSales,
+                            borderColor: '#000000',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'ARIMA',
+                            data: arimaPred,
+                            borderColor: '#4361ee',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'SARIMAX',
+                            data: sarimaPred,
+                            borderColor: '#4cc9f0',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'LSTM',
+                            data: lstmPred,
+                            borderColor: '#f72585',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: $${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createArimaChart() {
+                // Datos de ejemplo para ARIMA
+                const weeks = weeklyData.weeks.slice(20);
+                const actual = weeklyData.sales.slice(20);
+                const pred = [294000, 621500, 528000, 963500, 402000, 801000, 467500, 371500, 460000, 38500, 399900, 393100, 16000, 19800];
+                const forecast = [450000, 380000, 440000, 40000, 410000, 380000, 20000];
+
+                const ctx = document.getElementById('arimaChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [...weeks, ...Array.from({
+                            length: 7
+                        }, (_, i) => `Proy ${i+1}`)],
+                        datasets: [{
+                            label: 'Real',
+                            data: [...actual, ...Array(7).fill(null)],
+                            borderColor: '#000000',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'Predicción ARIMA',
+                            data: [...pred, ...forecast],
+                            borderColor: '#4361ee',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: $${context.raw ? context.raw.toLocaleString() : 'N/A'}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createSarimaChart() {
+                // Datos de ejemplo para SARIMAX
+                const weeks = weeklyData.weeks.slice(20);
+                const actual = weeklyData.sales.slice(20);
+                const pred = [294000, 621500, 528000, 963500, 402000, 801000, 467500, 371500, 460000, 38500, 399900, 393100, 16000, 19800];
+                const forecast = [460000, 370000, 455000, 35000, 400000, 390000, 18000];
+
+                const ctx = document.getElementById('sarimaChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [...weeks, ...Array.from({
+                            length: 7
+                        }, (_, i) => `Proy ${i+1}`)],
+                        datasets: [{
+                            label: 'Real',
+                            data: [...actual, ...Array(7).fill(null)],
+                            borderColor: '#000000',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'Predicción SARIMAX',
+                            data: [...pred, ...forecast],
+                            borderColor: '#4cc9f0',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: $${context.raw ? context.raw.toLocaleString() : 'N/A'}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createLstmChart() {
+                // Datos de ejemplo para LSTM
+                const weeks = weeklyData.weeks.slice(20);
+                const actual = weeklyData.sales.slice(20);
+                const pred = [294000, 621500, 528000, 963500, 402000, 801000, 467500, 371500, 460000, 38500, 399900, 393100, 16000, 19800];
+                const forecast = [455000, 375000, 450000, 38000, 405000, 385000, 19000];
+
+                const ctx = document.getElementById('lstmChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [...weeks, ...Array.from({
+                            length: 7
+                        }, (_, i) => `Proy ${i+1}`)],
+                        datasets: [{
+                            label: 'Real',
+                            data: [...actual, ...Array(7).fill(null)],
+                            borderColor: '#000000',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'Predicción LSTM',
+                            data: [...pred, ...forecast],
+                            borderColor: '#f72585',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: $${context.raw ? context.raw.toLocaleString() : 'N/A'}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return `$${value.toLocaleString()}`;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Create all charts
+            createMainChart();
+            createScatterChart();
+            createTimeSeriesChart();
+            createComponentsChart();
+            createForecastChart();
+            createModelsComparisonChart();
+            createArimaChart();
+            createSarimaChart();
+            createLstmChart();
+        });
+    </script>
+</body>
+
+</html>

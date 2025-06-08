@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeFlow - Análisis Predictivo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 1.5rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+        
+        .nav-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .nav-item:hover {
+            background-color: #f0f4ff;
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            background-color: #f0f4ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Main Content */
+        
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        /* Cards */
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        /* Tabs */
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+            margin-right: 0.5rem;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        /* Charts */
+        
+        .chart-container {
+            height: 400px;
+            margin-top: 1rem;
+        }
+        /* Data Input */
+        
+        .data-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+        /* Buttons */
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        /* Tab Content */
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        /* Dashboard Grid */
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .data-input {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">TF</div>
+                <span>TimeFlow</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Navegación</div>
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <div class="nav-icon">📊</div>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="time-series">
+                    <div class="nav-icon">⏳</div>
+                    <span>Series de Tiempo</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="forecast">
+                    <div class="nav-icon">📈</div>
+                    <span>Proyecciones</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="profitability">
+                    <div class="nav-icon">💰</div>
+                    <span>Rentabilidad</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Herramientas</div>
+                <a href="#" class="nav-item" data-tab="models">
+                    <div class="nav-icon">⚙️</div>
+                    <span>Modelos</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="data">
+                    <div class="nav-icon">📂</div>
+                    <span>Datos</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="analysis">
+                    <div class="nav-icon">🔍</div>
+                    <span>Análisis</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Configuración</div>
+                <a href="#" class="nav-item" data-tab="account">
+                    <div class="nav-icon">👤</div>
+                    <span>Cuenta</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="settings">
+                    <div class="nav-icon">⚡</div>
+                    <span>Preferencias</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Análisis Predictivo</h1>
+                <div class="user-avatar">JS</div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Cargar Datos</h2>
+                    </div>
+
+                    <div class="data-input">
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">Fuente de Datos</label>
+                                <select class="input-field">
+                                    <option>Subir archivo</option>
+                                    <option>Conectar a base de datos</option>
+                                    <option>API externa</option>
+                                    <option>Datos de ejemplo</option>
+                                </select>
+                            </div>
+
+                            <div class="file-upload">
+                                <p>Arrastra tu archivo CSV o Excel aquí</p>
+                                <small>o haz clic para seleccionar</small>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="input-group">
+                                <label class="input-label">Configuración del Modelo</label>
+                                <select class="input-field">
+                                    <option>Auto-detección (recomendado)</option>
+                                    <option>ARIMA</option>
+                                    <option>SARIMA</option>
+                                    <option>Prophet</option>
+                                    <option>LSTM</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">Columna de Fecha</label>
+                                <input type="text" class="input-field" placeholder="Ej: fecha, date">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">Columna de Valores</label>
+                                <input type="text" class="input-field" placeholder="Ej: ventas, consumo">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">Períodos a Proyectar</label>
+                                <input type="number" class="input-field" value="12">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;">
+                        Ejecutar Análisis
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Proyección de Ventas</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Series Tab -->
+            <div id="time-series-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Series de Tiempo</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="timeSeriesChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Componentes de la Serie</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="componentsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast Tab -->
+            <div id="forecast-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Proyecciones</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Intervalos de Confianza</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="confidenceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profitability Tab -->
+            <div id="profitability-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Rentabilidad</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="profitabilityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Análisis de Costos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="costAnalysisChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Models Tab -->
+            <div id="models-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Modelos Predictivos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="modelsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Tab -->
+            <div id="data-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Gestión de Datos</h2>
+                    </div>
+                    <p style="padding: 1rem;">Aquí puedes gestionar tus conjuntos de datos y fuentes de información.</p>
+                </div>
+            </div>
+
+            <!-- Analysis Tab -->
+            <div id="analysis-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Análisis Avanzado</h2>
+                    </div>
+                    <p style="padding: 1rem;">Herramientas de análisis avanzado para explorar tus datos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Remove active class from all items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+
+                    // Add active class to clicked item
+                    this.classList.add('active');
+
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+
+                    // Show the selected tab content
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Initialize Charts
+            function createMainChart() {
+                const ctx = document.getElementById('mainChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
+                            'Ene*', 'Feb*', 'Mar*', 'Abr*', 'May*', 'Jun*', 'Jul*', 'Ago*', 'Sep*', 'Oct*', 'Nov*', 'Dic*'
+                        ],
+                        datasets: [{
+                            label: 'Histórico',
+                            data: [120, 135, 142, 138, 145, 150, 158, 165, 162, 170, 175, 182],
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }, {
+                            label: 'Proyección',
+                            data: [null, null, null, null, null, null, null, null, null, null, null, 182,
+                                188, 195, 200, 210, 215, 220, 225, 230, 235, 240, 245, 250
+                            ],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.05)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createTimeSeriesChart() {
+                const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({
+                            length: 24
+                        }, (_, i) => `M${i+1}`),
+                        datasets: [{
+                            label: 'Serie de Tiempo',
+                            data: [120, 135, 142, 138, 145, 150, 158, 165, 162, 170, 175, 182,
+                                188, 195, 200, 210, 215, 220, 225, 230, 235, 240, 245, 250
+                            ],
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            function createComponentsChart() {
+                const ctx = document.getElementById('componentsChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({
+                            length: 24
+                        }, (_, i) => `M${i+1}`),
+                        datasets: [{
+                            label: 'Tendencia',
+                            data: [110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165,
+                                170, 175, 180, 185, 190, 195, 200, 205, 210, 215, 220, 225
+                            ],
+                            borderColor: '#4361ee',
+                            borderWidth: 2,
+                            tension: 0.1
+                        }, {
+                            label: 'Estacionalidad',
+                            data: [10, 20, 22, 13, 15, 15, 18, 20, 12, 15, 15, 17,
+                                18, 20, 20, 25, 25, 25, 25, 25, 25, 25, 25, 25
+                            ],
+                            borderColor: '#f72585',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            function createForecastChart() {
+                const ctx = document.getElementById('forecastChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({
+                            length: 36
+                        }, (_, i) => i < 24 ? `M${i+1}` : `P${i-23}`),
+                        datasets: [{
+                            label: 'Histórico',
+                            data: [...Array(24).fill().map((_, i) => 120 + i * 5 + Math.sin(i / 2) * 10), ...Array(12).fill(null)],
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        }, {
+                            label: 'Proyección',
+                            data: [...Array(24).fill(null), 182, 185, 188, 192, 196, 200,
+                                204, 208, 212, 216, 220, 225
+                            ],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.05)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            function createConfidenceChart() {
+                const ctx = document.getElementById('confidenceChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({
+                            length: 12
+                        }, (_, i) => `P${i+1}`),
+                        datasets: [{
+                            label: 'Proyección',
+                            data: [182, 185, 188, 192, 196, 200, 204, 208, 212, 216, 220, 225],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.05)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        }, {
+                            label: 'Límite superior',
+                            data: [190, 194, 198, 203, 208, 213, 218, 223, 228, 233, 238, 244],
+                            borderColor: 'rgba(247, 37, 133, 0.3)',
+                            backgroundColor: 'rgba(247, 37, 133, 0.01)',
+                            borderWidth: 1,
+                            tension: 0.3
+                        }, {
+                            label: 'Límite inferior',
+                            data: [174, 176, 178, 181, 184, 187, 190, 193, 196, 199, 202, 206],
+                            borderColor: 'rgba(247, 37, 133, 0.3)',
+                            backgroundColor: 'rgba(247, 37, 133, 0.01)',
+                            borderWidth: 1,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            function createProfitabilityChart() {
+                const ctx = document.getElementById('profitabilityChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Ganancias',
+                            data: [15, 16, 17, 18, 20, 22, 24, 25, 23, 25, 28, 30],
+                            backgroundColor: '#4cc9f0'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            function createCostAnalysisChart() {
+                const ctx = document.getElementById('costAnalysisChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Materias primas', 'Mano de obra', 'Logística', 'Operativos', 'Otros'],
+                        datasets: [{
+                            data: [45, 30, 12, 8, 5],
+                            backgroundColor: [
+                                '#4361ee',
+                                '#4895ef',
+                                '#4cc9f0',
+                                '#f72585',
+                                '#3f37c9'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            function createModelsChart() {
+                const ctx = document.getElementById('modelsChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Precisión', 'Velocidad', 'Estabilidad', 'Interpretabilidad', 'Flexibilidad'],
+                        datasets: [{
+                            label: 'ARIMA',
+                            data: [85, 90, 95, 80, 70],
+                            backgroundColor: 'rgba(67, 97, 238, 0.2)',
+                            borderColor: '#4361ee',
+                            borderWidth: 2
+                        }, {
+                            label: 'Prophet',
+                            data: [75, 80, 85, 90, 85],
+                            backgroundColor: 'rgba(247, 37, 133, 0.2)',
+                            borderColor: '#f72585',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // Create all charts
+            createMainChart();
+            createTimeSeriesChart();
+            createComponentsChart();
+            createForecastChart();
+            createConfidenceChart();
+            createProfitabilityChart();
+            createCostAnalysisChart();
+            createModelsChart();
+        });
+    </script>
+</body>
+
+</html>
