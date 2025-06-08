@@ -12,4 +12,4 @@ localhost/index1
 localhost/14
 localhost/13
 
-In /13 and /14, you can see predicted model ARIMA and SARIMA, to predic the sales of your data.
+In /13 and /14, you can see predict models, ARIMA and SARIMA, to predic the sales of your historic data.
